@@ -54,6 +54,34 @@
 
 ### Aliases
 
+1. Create an alias `dc` that resolves to `cd` for when you type it wrongly.
+
+   **Solution**:
+
+   ```bash
+   $ vim ~/.bash_aliases
+   $ cat ~/.bash_aliases
+   alias dc='cd'
+   ```
+
+1. Run `history | awk '{$1="";print substr($0,2)}' | sort | uniq -c | sort -n | tail -n 10` to get your top 10 most used commands and consider writing shorter aliases for them. Note: this works for Bash; if you’re using ZSH, use `history 1` instead of just `history`.
+
+   ```bash
+   $ cat ~/.bash_aliases
+   alias dc=cd
+   alias sl=ls
+   alias gs='git status'
+   alias gaa='git add .'
+   alias gpsh='git push'
+   alias gpshf='git push -f'
+   alias gc='git commit'
+   alias gca='git commit --amend'
+   alias gcan='git commit --amend --no-edit'
+   alias gpl='git pull'
+   alias gco='git checkout'
+   alias gl='git log'
+   ```
+
 ### Dotfiles
 
 ### Remote Machines
