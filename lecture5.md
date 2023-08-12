@@ -84,4 +84,61 @@
 
 ### Dotfiles
 
+1. Create a folder for your dotfiles and set up version control.
+
+   **Solution:**
+
+   ```bash
+   $ mkdir ~/dotfiles
+   $ cd ~/dotfiles
+   $ git init
+   ```
+
+1. Add a configuration for at least one program, e.g. your shell, with some customization (to start off, it can be something as simple as customizing your shell prompt by setting `$PS1`).
+
+   **Solution:**
+
+   ```bash
+   $ cp ~/.vimrc ~/dotfiles
+   $ cp ~/.gitconfig ~/dotfiles
+   ```
+
+1. Set up a method to install your dotfiles quickly (and without manual effort) on a new machine. This can be as simple as a shell script that calls ln -s for each file, or you could use a specialized utility.
+
+   **Solution:**
+
+   ```bash
+   $ snap install chezmoi --classic
+   $ chezmoi init
+   $ chezmoi add ~/.vimrc
+   $ chezmoi add ~/.gitconfig
+   $ chezmoi cd
+   $ git add .
+   $ git commit -m "Add vim and gitconfig"
+   $ git remote add origin https://github.com/farhaan-mukarram/dotfiles.git
+   $ git branch -M main
+   $ git push -u origin main
+   ```
+
+1. Test your installation script on a fresh virtual machine
+
+   **Solution:**
+
+   ```bash
+   $ snap install chezmoi --classic
+   $ chezmoi init https://github.com/farhaan-mukarram/dotfiles.git
+   $ chezmoi diff
+   $ chezmoi apply -v
+   ```
+
+1. Migrate all of your current tool configurations to your dotfiles repository
+
+   **Solution:**
+   Done in step 3
+
+1. Publish your dotfiles on GitHub.
+
+   **Solution:**
+   Done in step 3
+
 ### Remote Machines
