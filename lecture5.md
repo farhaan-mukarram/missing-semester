@@ -142,3 +142,96 @@
    Done in step 3
 
 ### Remote Machines
+
+Install a Linux virtual machine (or use an already existing one) for this exercise. If you are not familiar with virtual machines check out [`this`](https://hibbard.eu/install-ubuntu-virtual-box/) tutorial for installing one.
+
+1. Go to` ~/.ssh/` and check if you have a pair of SSH keys there. If not, generate them with `ssh-keygen -o -a 100 -t ed25519`. It is recommended that you use a password and use `ssh-agent`, more info [`here`](https://www.ssh.com/ssh/agent).
+   **Solution**:
+
+   ```bash
+   $ ssh-keygen -o -a 100 -t ed25519
+   Generating public/private ed25519 key pair.
+   Enter file in which to save the key (/home/farhaan/.ssh/id_ed25519):
+   Enter passphrase (empty for no passphrase):
+   Enter same passphrase again:
+   Your identification has been saved in /home/farhaan/.ssh/id_ed25519
+   Your public key has been saved in /home/farhaan/.ssh/id_ed25519.pub
+   ...
+   ```
+
+1. Edit `.ssh/config` to have an entry as follows
+
+   ```bash
+   Host vm
+      User username_goes_here
+      HostName ip_goes_here
+      IdentityFile ~/.ssh/id_ed25519
+      LocalForward 9999 localhost:8888
+   ```
+
+   **Solution**:
+
+   ```bash
+   $ vim ~/.ssh/config
+   $ cat ~/.ssh/config
+   Host vm
+      User farhaan
+      HostName XXX.XXX.XXX.XXX
+      IdentityFile ~/.ssh/id_ed25519
+      LocalForward 9999 localhost:8888
+   ```
+
+1. Use `ssh-copy-id vm` to copy your ssh key to the server
+
+   **Solution**:
+
+   ```bash
+   $ ssh-keygen -o -a 100 -t ed25519
+   /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+   /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+   farhaan@XXX.XXX.XXX.XXX's password:
+   Number of key(s) added: 1
+   Now try logging into the machine, with: "ssh 'vm'"
+   and check to make sure that only the key(s) you wanted were added
+   ```
+
+1. Start a webserver in your VM by executing `python -m http.server 8888`. Access the VM webserver by navigating to `http://localhost:9999` in your machine
+
+   **Solution**:
+
+   ```bash
+   $ ssh vm
+   Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-78-generic x86_64)
+   ...
+   ...
+   Enable ESM Apps to receive additional future security updates.
+   See https://ubuntu.com/esm or run: sudo pro status
+
+   $ python3 -m http.server 8888
+   Serving HTTP on 0.0.0.0 port 8888 (http://0.0.0.0:8888/)
+   127.0.0.1 - - [13/Aug/2023 11:25:45] "GET / HTTP/1.1" 200 -
+   127.0.0.1 - - [13/Aug/2023 11:25:45] code 404, message File not found
+   127.0.0.1 - - [13/Aug/2023 11:25:45] "GET /favicon.ico HTTP/1.1" 404 -
+   ```
+
+   Navigating to `localhost:8888` shows a page with the user's directory listing
+
+1. Edit your SSH server config by doing `sudo vim /etc/ssh/sshd_config` and disable password authentication by editing the value of `PasswordAuthentication`. Disable root login by editing the value of `PermitRootLogin`. Restart the `ssh` service with `sudo service sshd restart`. Try sshing in again
+
+   **Solution**:
+
+   ```bash
+   $ sudo vim /etc/ssh/sshd_config
+   $ sudo service sshd restart
+   $ exit
+   logout
+   Connection to XXX.XXX.XXX.XXX closed.
+   $ ssh vm
+   Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-78-generic x86_64)
+   ...
+   ...
+   Enable ESM Apps to receive additional future security updates.
+   See https://ubuntu.com/esm or run: sudo pro status
+   ```
+
+   The value of `PasswordAuthentication` and `PermitRootLogin` in the `sshd_config` has to be changed to `no` for disabling password authentication and root login
